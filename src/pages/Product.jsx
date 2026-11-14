@@ -184,7 +184,7 @@ export default function Product() {
       {/* Details */}
       <section className="pdp-details">
         <div className="tabs" role="tablist" aria-label="Product details">
-          {[['desc', 'Description'], ['spec', 'Specifications'], ['ship', 'Delivery & returns']].map(([k, l]) => (
+          {[['desc', 'Description'], ['spec', 'Specifications'], ['ship', 'Delivery']].map(([k, l]) => (
             <button key={k} role="tab" aria-selected={tab === k} className={tab === k ? 'on' : ''} onClick={() => setTab(k)}>{l}</button>
           ))}
         </div>

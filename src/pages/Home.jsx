@@ -253,7 +253,7 @@ function Reviews() {
 function Newsletter() {
   return (
     <section className="section tight">
-      <div className="wrap news">
+      <div className="wrap"><div className="news">
         <div>
           <h2>Get <em>10% off</em> your first order</h2>
           <p>Join for new arrivals, offers and design ideas. No spam.</p>
@@ -262,7 +262,7 @@ function Newsletter() {
           <input type="email" placeholder="Your email address" aria-label="Email address" />
           <button className="btn btn-primary">Subscribe</button>
         </form>
-      </div>
+      </div></div>
     </section>
   )
 }
