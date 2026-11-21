@@ -37,7 +37,7 @@ export default function Order() {
         <span className="ok-tick" aria-hidden="true"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12l5 5 9-10" /></svg></span>
         <p className="eyebrow"><i /> Order received</p>
         <h1>Thank you, <em>{o.customer.name.split(' ')[0]}.</em></h1>
-        <p className="oid">Order ID <strong>{o.id}</strong> · {date}</p>
+        <p className="oid">Order ID <strong>{o.id}</strong> · <span className="oid-date">{date}</span></p>
         <div className="t-actions no-print">
           <button className="btn btn-ghost" onClick={copy} aria-live="polite">{copied ? 'Copied ✓' : 'Copy order ID'}</button>
           <button className="btn btn-ghost" onClick={() => window.print()}>Print / save PDF</button>
@@ -48,7 +48,7 @@ export default function Order() {
       <div className="co-grid">
         <section>
           <h2 className="sub">Items</h2>
-          <ul className="cp-list">
+          <ul className="cp-list order-list">
             {o.items.map((i) => (
               <li key={i.key}>
                 <div className="cart-thumb"><FurnitureArt kind={i.kind} tone={i.tone} /></div>
@@ -56,8 +56,8 @@ export default function Order() {
                   <h3>{i.name}</h3>
                   {i.meta && <p className="mono-label">{i.meta}</p>}
                   {i.lines && <ul className="cart-lines">{i.lines.map((l) => <li key={l}>{l}</li>)}</ul>}
+                  <span className="cp-qty">Qty {i.qty}</span>
                 </div>
-                <span className="cp-qty">Qty {i.qty}</span>
                 <strong className="cp-price">{inr(i.price * i.qty)}</strong>
               </li>
             ))}

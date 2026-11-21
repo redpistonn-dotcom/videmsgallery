@@ -1,16 +1,18 @@
 // Flat brand-style furniture illustrations used as stand-ins until real product photos
 // are uploaded. Swap for <img> in ProductCard when the API provides image URLs.
-const shade = (hex, amt) => {
-  const n = parseInt(hex.slice(1), 16)
-  const c = (v) => Math.max(0, Math.min(255, v + amt))
-  const r = c(n >> 16), g = c((n >> 8) & 255), b = c(n & 255)
-  return `#${((1 << 24) | (r << 16) | (g << 8) | b).toString(16).slice(1)}`
+// Mix toward a target colour (keeps deep tones like burgundy from clamping to a saturated channel).
+const mix = (hex, to, t) => {
+  const a = parseInt(hex.slice(1), 16), b = parseInt(to.slice(1), 16)
+  const ch = (s) => Math.round(((a >> s) & 255) * (1 - t) + ((b >> s) & 255) * t)
+  return `#${((1 << 24) | (ch(16) << 16) | (ch(8) << 8) | ch(0)).toString(16).slice(1)}`
 }
+// amt < 0 darkens (towards a near-black wine), amt > 0 lightens (towards white)
+const shade = (hex, amt) => (amt < 0 ? mix(hex, '#1A0508', Math.min(1, -amt / 106)) : mix(hex, '#FFFFFF', Math.min(1, amt / 200)))
 
 const WOOD = '#7A4B20'
 const GOLD = '#B8862F'
 
-export default function FurnitureArt({ kind = 'sofa', tone = '#C8281F', className = '' }) {
+export default function FurnitureArt({ kind = 'sofa', tone = '#7B1E2E', className = '' }) {
   const dark = shade(tone, -34)
   const light = shade(tone, 28)
   let body = null

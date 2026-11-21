@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link, Navigate, useParams } from 'react-router-dom'
 import FurnitureArt from '../components/FurnitureArt'
 import ProductCard from '../components/ProductCard'
@@ -51,12 +51,23 @@ export default function Product() {
   const [pin, setPin] = useState('')
   const [pinMsg, setPinMsg] = useState(null)
   const [tab, setTab] = useState('desc')
+  const buyRef = useRef(null)
+  const [buyInView, setBuyInView] = useState(false)
 
   useEffect(() => {
     setFi(0); setView('front'); setQty(1); setPin(''); setPinMsg(null); setTab('desc')
     if (p) document.title = `${p.name} — Videm's Gallery`
     return () => { document.title = "Videm's Gallery — Furniture & Interior" }
   }, [slug]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  // UI only: hide the mobile sticky bar while the inline buy row is on screen
+  useEffect(() => {
+    const el = buyRef.current
+    if (!el || !('IntersectionObserver' in window)) return
+    const io = new IntersectionObserver(([e]) => setBuyInView(e.isIntersecting), { threshold: 0.6 })
+    io.observe(el)
+    return () => io.disconnect()
+  }, [slug, p])
 
   const fin = useMemo(() => (p ? finishes(p) : []), [p])
   const related = useMemo(() => (p ? [...products.filter((x) => x.category === p.category && x.id !== p.id), ...products.filter((x) => x.category !== p.category && x.id !== p.id)].slice(0, 8) : []), [p])
@@ -138,7 +149,7 @@ export default function Product() {
             </div>
           </fieldset>
 
-          <div className="pdp-buy">
+          <div className="pdp-buy" ref={buyRef}>
             <div className="qty lg" role="group" aria-label="Quantity">
               <button onClick={() => setQty(Math.max(1, qty - 1))} aria-label="Decrease quantity" disabled={out}>−</button>
               <span aria-live="polite">{qty}</span>
@@ -220,7 +231,7 @@ export default function Product() {
       </section>
 
       {/* Mobile sticky bar */}
-      <div className="pdp-sticky">
+      <div className={`pdp-sticky ${buyInView ? 'hide' : ''}`}>
         <div><strong>{inr(p.price)}</strong><s>{inr(p.mrp)}</s></div>
         <button className="btn btn-primary" disabled={out} onClick={() => add(item(), qty)}>{out ? 'Out of stock' : 'Add to cart'}</button>
       </div>

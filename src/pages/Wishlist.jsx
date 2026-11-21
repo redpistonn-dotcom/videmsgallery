@@ -1,4 +1,6 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import FurnitureArt from '../components/FurnitureArt'
 import ProductCard from '../components/ProductCard'
 import { useWishlist } from '../context/WishlistContext'
 import { useCart } from '../context/CartContext'
@@ -7,6 +9,7 @@ import { byId } from '../data/catalog'
 export default function Wishlist() {
   const { ids, clear } = useWishlist()
   const { add } = useCart()
+  const [confirm, setConfirm] = useState(false)
   const list = ids.map((id) => byId[id]).filter(Boolean)
   const buyable = list.filter((p) => p.stock !== 'out')
 
@@ -24,12 +27,21 @@ export default function Wishlist() {
         <>
           <div className="wish-bar">
             <button className="btn btn-primary" onClick={addAll} disabled={!buyable.length}>Add all to cart</button>
-            <button className="btn btn-ghost" onClick={clear}>Clear wishlist</button>
+            {confirm ? (
+              <span className="wish-confirm" role="alert">
+                Remove all {list.length}?
+                <button className="link-btn" onClick={() => { clear(); setConfirm(false) }}>Yes, remove</button>
+                <button className="link-btn" onClick={() => setConfirm(false)} autoFocus>Cancel</button>
+              </span>
+            ) : (
+              <button className="link-btn" onClick={() => setConfirm(true)}>Clear wishlist</button>
+            )}
           </div>
           <div className="p-grid">{list.map((p) => <ProductCard key={p.id} p={p} />)}</div>
         </>
       ) : (
         <div className="empty">
+          <div className="empty-art" aria-hidden="true"><FurnitureArt kind="sofa" tone="#7B1E2E" /></div>
           <p className="serif">Your wishlist is empty</p>
           <p>Tap the heart on any product to save it here. Saved on this device.</p>
           <Link to="/shop" className="btn btn-primary">Browse furniture</Link>

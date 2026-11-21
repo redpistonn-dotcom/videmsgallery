@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Link, NavLink, useNavigate } from 'react-router-dom'
 import { useCart } from '../context/CartContext'
 import { useWishlist } from '../context/WishlistContext'
@@ -71,7 +71,17 @@ export default function Header() {
   const [menu, setMenu] = useState(false)
   const close = () => setMenu(false)
 
+  // Mobile menu: Esc closes it
+  useEffect(() => {
+    if (!menu) return
+    const k = (e) => e.key === 'Escape' && setMenu(false)
+    document.addEventListener('keydown', k)
+    return () => document.removeEventListener('keydown', k)
+  }, [menu])
+
   return (
+    <>
+    <div className={`menu-scrim ${menu ? 'show' : ''}`} onClick={close} aria-hidden="true" />
     <header className="site-header">
       <a className="skip" href="#content">Skip to content</a>
       <div className="announce">
@@ -111,5 +121,6 @@ export default function Header() {
         </div>
       </div>
     </header>
+    </>
   )
 }

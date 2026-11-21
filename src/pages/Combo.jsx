@@ -105,7 +105,7 @@ function ComboView({ slug }) {
               </div>
             ))}
             <div className="sum total"><span>Your combo price</span><span>{inr(calc.final)}</span></div>
-            <p className="saving">You save {inr(combo.mrp + calc.delta - calc.final)} vs. buying separately · MRP <s>{inr(combo.mrp + calc.delta)}</s></p>
+            <p className="saving"><span>You save {inr(combo.mrp + calc.delta - calc.final)} vs. buying separately</span><span className="saving-mrp">MRP <s>{inr(combo.mrp + calc.delta)}</s></span></p>
             <button className="btn btn-primary block" onClick={addCombo}>Add combo to cart</button>
           </div>
         </div>

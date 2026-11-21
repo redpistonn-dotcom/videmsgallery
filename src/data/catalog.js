@@ -2,7 +2,7 @@
 // Shape mirrors the planned DB tables: categories, products, combos, combo_slots.
 
 export const categories = [
-  { slug: 'sofas', name: 'Sofas', kind: 'sofa', tone: '#C8281F' },
+  { slug: 'sofas', name: 'Sofas', kind: 'sofa', tone: '#7B1E2E' },
   { slug: 'beds', name: 'Beds', kind: 'bed', tone: '#B79A74' },
   { slug: 'dining', name: 'Dining', kind: 'table', tone: '#8B5A25' },
   { slug: 'wardrobes', name: 'Wardrobes', kind: 'wardrobe', tone: '#A9825A' },
@@ -13,7 +13,7 @@ export const categories = [
 ]
 
 export const products = [
-  { id: 'p1', slug: 'aria-3-seater-sofa', name: 'Aria 3 Seater Sofa', category: 'sofas', kind: 'sofa', tone: '#C8281F', price: 38900, mrp: 52900, material: 'Sheesham wood · Velvet', rating: 4.7, reviews: 214, tag: 'Bestseller', stock: 'in' },
+  { id: 'p1', slug: 'aria-3-seater-sofa', name: 'Aria 3 Seater Sofa', category: 'sofas', kind: 'sofa', tone: '#7B1E2E', price: 38900, mrp: 52900, material: 'Sheesham wood · Velvet', rating: 4.7, reviews: 214, tag: 'Bestseller', stock: 'in' },
   { id: 'p2', slug: 'milano-l-shape-sofa', name: 'Milano L-Shape Sofa', category: 'sofas', kind: 'sofa', tone: '#3E4C59', price: 64900, mrp: 82000, material: 'Teak wood · Linen blend', rating: 4.6, reviews: 98, tag: 'New', stock: 'in' },
   { id: 'p3', slug: 'verona-accent-sofa', name: 'Verona 2 Seater Sofa', category: 'sofas', kind: 'sofa', tone: '#B8862F', price: 27500, mrp: 34000, material: 'Mango wood · Velvet', rating: 4.5, reviews: 61, tag: null, stock: 'low' },
   { id: 'p4', slug: 'kyoto-king-bed', name: 'Kyoto King Size Bed', category: 'beds', kind: 'bed', tone: '#C9B79C', price: 46500, mrp: 61000, material: 'Solid sheesham · Fabric headboard', rating: 4.8, reviews: 176, tag: 'Bestseller', stock: 'in' },
@@ -24,8 +24,8 @@ export const products = [
   { id: 'p9', slug: 'sienna-4-door-wardrobe', name: 'Sienna 4 Door Wardrobe', category: 'wardrobes', kind: 'wardrobe', tone: '#A9825A', price: 58900, mrp: 74500, material: 'Solid sheesham · Mirror', rating: 4.5, reviews: 59, tag: null, stock: 'in' },
   { id: 'p10', slug: 'nord-tv-unit', name: 'Nord TV Unit 72"', category: 'tv-units', kind: 'tvunit', tone: '#6B4A33', price: 21900, mrp: 28900, material: 'Solid mango wood', rating: 4.6, reviews: 112, tag: null, stock: 'in' },
   { id: 'p11', slug: 'luna-coffee-table', name: 'Luna Coffee Table', category: 'tables', kind: 'coffee', tone: '#9C7A52', price: 11800, mrp: 15200, material: 'Sheesham · Marble top', rating: 4.7, reviews: 143, tag: 'Popular', stock: 'in' },
-  { id: 'p12', slug: 'ember-lounge-chair', name: 'Ember Lounge Chair', category: 'chairs', kind: 'chair', tone: '#C8281F', price: 14500, mrp: 18900, material: 'Teak wood · Velvet', rating: 4.9, reviews: 47, tag: 'New', stock: 'out' },
-  { id: 'p13', slug: 'aria-2-seater-sofa', name: 'Aria 2 Seater Sofa', category: 'sofas', kind: 'sofa', tone: '#C8281F', price: 29900, mrp: 39900, material: 'Sheesham wood · Velvet', rating: 4.6, reviews: 90, tag: null, stock: 'in' },
+  { id: 'p12', slug: 'ember-lounge-chair', name: 'Ember Lounge Chair', category: 'chairs', kind: 'chair', tone: '#5E1A28', price: 14500, mrp: 18900, material: 'Teak wood · Velvet', rating: 4.9, reviews: 47, tag: 'New', stock: 'out' },
+  { id: 'p13', slug: 'aria-2-seater-sofa', name: 'Aria 2 Seater Sofa', category: 'sofas', kind: 'sofa', tone: '#8E2C3C', price: 29900, mrp: 39900, material: 'Sheesham wood · Velvet', rating: 4.6, reviews: 90, tag: null, stock: 'in' },
   { id: 'p14', slug: 'marlo-glass-coffee-table', name: 'Marlo Glass Coffee Table', category: 'tables', kind: 'coffee', tone: '#6B4A33', price: 15600, mrp: 19800, material: 'Metal frame · Tempered glass', rating: 4.4, reviews: 38, tag: null, stock: 'in' },
   { id: 'p15', slug: 'cora-accent-chair', name: 'Cora Accent Chair', category: 'chairs', kind: 'chair', tone: '#B8862F', price: 9800, mrp: 12400, material: 'Solid wood · Boucle', rating: 4.5, reviews: 52, tag: null, stock: 'in' },
   { id: 'p16', slug: 'aethel-4-seater-dining', name: 'Aethel 4 Seater Dining Table', category: 'dining', kind: 'table', tone: '#9C6B35', price: 29800, mrp: 38500, material: 'Solid mango wood', rating: 4.6, reviews: 88, tag: null, stock: 'in' },

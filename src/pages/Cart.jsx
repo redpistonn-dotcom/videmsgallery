@@ -22,6 +22,7 @@ export default function Cart() {
     return (
       <main className="wrap shop">
         <div className="empty">
+          <div className="empty-art" aria-hidden="true"><FurnitureArt kind="sofa" tone="#7B1E2E" /></div>
           <p className="serif">Your cart is empty</p>
           <p>Add pieces you love and they'll appear here.</p>
           <Link to="/shop" className="btn btn-primary">Browse furniture</Link>
@@ -38,9 +39,10 @@ export default function Cart() {
 
       <div className="co-grid">
         <section aria-label="Cart items">
-          <p className={`free-note flat ${toFree > 0 ? '' : 'ok'}`}>
-            {toFree > 0 ? <>Add <strong>{inr(toFree)}</strong> more for free delivery</> : "You've unlocked free delivery"}
-          </p>
+          <div className={`free-note flat ${toFree > 0 ? '' : 'ok'}`}>
+            <p>{toFree > 0 ? <>Add <strong>{inr(toFree)}</strong> more for free delivery</> : "You've unlocked free delivery"}</p>
+            <FreeBar subtotal={subtotal} />
+          </div>
           <ul className="cp-list">
             {items.map((i) => (
               <li key={i.key}>
@@ -72,6 +74,11 @@ export default function Cart() {
       </div>
     </main>
   )
+}
+
+export function FreeBar({ subtotal }) {
+  const pct = Math.min(100, Math.round((subtotal / delivery.freeAbove) * 100))
+  return <span className={`free-bar ${pct >= 100 ? 'full' : ''}`} role="progressbar" aria-label="Progress to free delivery" aria-valuemin={0} aria-valuemax={100} aria-valuenow={pct}><i style={{ width: `${pct}%` }} /></span>
 }
 
 export function Summary({ subtotal, discount, shipping, total, code, couponMsg, msg, input, setInput, setMsg, apply, removeCoupon, cta, shippingLabel, children }) {

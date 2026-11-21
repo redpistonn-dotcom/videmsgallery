@@ -259,7 +259,7 @@ function Newsletter() {
           <p>Join for new arrivals, offers and design ideas. No spam.</p>
         </div>
         <form onSubmit={(e) => e.preventDefault()} className="news-form">
-          <input type="email" placeholder="Your email address" aria-label="Email address" />
+          <input type="email" placeholder="Email address" aria-label="Email address" />
           <button className="btn btn-primary">Subscribe</button>
         </form>
       </div></div>

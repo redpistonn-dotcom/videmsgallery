@@ -1,14 +1,35 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, useSyncExternalStore } from 'react'
 import { Link } from 'react-router-dom'
 import FurnitureArt from './FurnitureArt'
 import { useCart } from '../context/CartContext'
+import { FreeBar } from '../pages/Cart'
 import { inr, delivery, coupons } from '../data/catalog'
+
+// true on narrow phones, where the drawer footer folds the coupon field and the price breakdown
+const NARROW = '(max-width: 480px)'
+const useNarrow = () => useSyncExternalStore(
+  (cb) => { const m = window.matchMedia(NARROW); m.addEventListener('change', cb); return () => m.removeEventListener('change', cb) },
+  () => window.matchMedia(NARROW).matches,
+  () => false,
+)
+
+// On narrow phones the coupon field hides behind a "Have a coupon?" toggle; elsewhere it renders inline.
+function Fold({ narrow, label, force, children }) {
+  if (!narrow) return children
+  return (
+    <details className="cp-fold" open={force || undefined}>
+      <summary>{label}</summary>
+      {children}
+    </details>
+  )
+}
 
 export default function CartDrawer() {
   const { open, setOpen, items, qty, remove, subtotal, shipping, discount, code, couponMsg, total, applyCoupon, removeCoupon } = useCart()
   const [input, setInput] = useState('')
   const [msg, setMsg] = useState(null)
   const closeRef = useRef(null)
+  const narrow = useNarrow()
   const lastFocus = useRef(null)
 
   // Esc closes; focus moves into the drawer on open and returns to the trigger on close.
@@ -21,7 +42,7 @@ export default function CartDrawer() {
   useEffect(() => {
     if (open) {
       lastFocus.current = document.activeElement
-      setTimeout(() => closeRef.current?.focus(), 60)
+      setTimeout(() => closeRef.current?.focus({ preventScroll: true }), 60)
     } else if (lastFocus.current instanceof HTMLElement) {
       lastFocus.current.focus()
       lastFocus.current = null
@@ -41,23 +62,23 @@ export default function CartDrawer() {
       <div className={`scrim ${open ? 'show' : ''}`} onClick={() => setOpen(false)} />
       <aside className={`drawer ${open ? 'open' : ''}`} inert={!open} role="dialog" aria-modal="true" aria-label="Shopping cart">
         <div className="drawer-head">
-          <h2>Your cart</h2>
-          <button className="icon-btn" ref={closeRef} onClick={() => setOpen(false)} aria-label="Close cart">✕</button>
+          <h2 ref={closeRef} tabIndex={-1}>Your cart</h2>
+          <button className="icon-btn" onClick={() => setOpen(false)} aria-label="Close cart">✕</button>
         </div>
 
         {items.length === 0 ? (
           <div className="drawer-empty">
+            <div className="empty-art" aria-hidden="true"><FurnitureArt kind="sofa" tone="#7B1E2E" /></div>
             <p className="serif">Your cart is empty</p>
             <p>Browse our collections and add pieces you love.</p>
             <button className="btn btn-primary" onClick={() => setOpen(false)}>Continue shopping</button>
           </div>
         ) : (
           <>
-            {toFree > 0 ? (
-              <p className="free-note">Add <strong>{inr(toFree)}</strong> more for free delivery</p>
-            ) : (
-              <p className="free-note ok">You've unlocked free delivery</p>
-            )}
+            <div className={`free-note ${toFree > 0 ? '' : 'ok'}`}>
+              <p>{toFree > 0 ? <>Add <strong>{inr(toFree)}</strong> more for free delivery</> : "You've unlocked free delivery"}</p>
+              <FreeBar subtotal={subtotal} />
+            </div>
             <ul className="cart-list">
               {items.map((i) => (
                 <li key={i.key}>
@@ -91,19 +112,32 @@ export default function CartDrawer() {
                   <button className="link-btn" onClick={() => { removeCoupon(); setMsg(null) }}>Remove</button>
                 </div>
               ) : (
-                <form className="coupon-form" onSubmit={apply}>
-                  <input value={input} onChange={(e) => { setInput(e.target.value); setMsg(null) }} placeholder="Coupon code" aria-label="Coupon code" list="coupon-hints" autoCapitalize="characters" />
-                  <datalist id="coupon-hints">{coupons.map((c) => <option key={c.code} value={c.code}>{c.text}</option>)}</datalist>
-                  <button className="btn btn-ghost" type="submit">Apply</button>
-                </form>
+                <Fold narrow={narrow} label="Have a coupon?" force={!!(msg && !msg.ok)}>
+                  <form className="coupon-form" onSubmit={apply}>
+                    <input value={input} onChange={(e) => { setInput(e.target.value); setMsg(null) }} placeholder="Coupon code" aria-label="Coupon code" list="coupon-hints" autoCapitalize="characters" />
+                    <datalist id="coupon-hints">{coupons.map((c) => <option key={c.code} value={c.code}>{c.text}</option>)}</datalist>
+                    <button className="btn btn-ghost" type="submit">Apply</button>
+                  </form>
+                </Fold>
               )}
               {(msg && !msg.ok) && <p className="cp-msg bad" role="alert">{msg.msg}</p>}
               {couponMsg && <p className="cp-msg bad" role="status">{couponMsg}</p>}
 
-              <div className="sum"><span>Subtotal</span><span>{inr(subtotal)}</span></div>
-              {discount > 0 && <div className="sum disc"><span>Coupon discount</span><span>−{inr(discount)}</span></div>}
-              <div className="sum"><span>Delivery</span><span>{shipping === 0 ? 'Free' : inr(shipping)}</span></div>
-              <div className="sum total"><span>Total</span><span>{inr(total)}</span></div>
+              {narrow ? (
+                <details className="sum-fold">
+                  <summary className="sum total"><span>Total</span><span>{inr(total)} <i aria-hidden="true">▾</i></span></summary>
+                  <div className="sum"><span>Subtotal</span><span>{inr(subtotal)}</span></div>
+                  {discount > 0 && <div className="sum disc"><span>Coupon discount</span><span>−{inr(discount)}</span></div>}
+                  <div className="sum"><span>Delivery</span><span>{shipping === 0 ? 'Free' : inr(shipping)}</span></div>
+                </details>
+              ) : (
+                <>
+                  <div className="sum"><span>Subtotal</span><span>{inr(subtotal)}</span></div>
+                  {discount > 0 && <div className="sum disc"><span>Coupon discount</span><span>−{inr(discount)}</span></div>}
+                  <div className="sum"><span>Delivery</span><span>{shipping === 0 ? 'Free' : inr(shipping)}</span></div>
+                  <div className="sum total"><span>Total</span><span>{inr(total)}</span></div>
+                </>
+              )}
               <Link to="/checkout" className="btn btn-primary btn-cta block" onClick={() => setOpen(false)}>Proceed to checkout <span className="arr" aria-hidden="true">→</span></Link>
               <Link to="/cart" className="link-arrow center" onClick={() => setOpen(false)}>View full cart</Link>
               <p className="fine">Exact delivery charges are confirmed at checkout.</p>
